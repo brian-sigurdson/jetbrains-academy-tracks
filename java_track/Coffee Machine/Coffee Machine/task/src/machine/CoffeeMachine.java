@@ -21,37 +21,6 @@ public class CoffeeMachine {
 
     private Scanner scanner;
 
-    private
-
-//    public int getMaxCupsAvailableToServe() {
-//        // no error checking just yet
-//        int maxCupsForAvailableWater = waterAvailable / waterPerCup;
-//        int maxCupsForAvailableMilk = milkAvailable / milkPerCup;
-//        int maxCupsForAvailableBeans = beansAvailable / beansPerCup;
-//        return Math.min(maxCupsForAvailableWater, Math.min(maxCupsForAvailableMilk, maxCupsForAvailableBeans));
-//    }
-
-//    public void getAvailableIngredients() {
-//        System.out.println("Write how many ml of water the coffee machine has:");
-//        waterAvailable = scanner.nextInt();
-//        System.out.println("Write how many ml of milk the coffee machine has:");
-//        milkAvailable = scanner.nextInt();
-//        System.out.println("Write how many grams of coffee beans the coffee machine has:");
-//        beansAvailable = scanner.nextInt();
-//    }
-//
-//    public void getCupsNeeded() {
-//        System.out.println("Write how many cups of coffee you will need:");
-//        numCupsNeeded = scanner.nextInt();
-//    }
-
-//    public void displayIngredientsNeeded() {
-//        System.out.printf("For %d cups of coffee you will need: %n", numCupsNeeded);
-//        System.out.printf("%d %s of water %n", waterPerCup * numCupsNeeded, liquidUOM);
-//        System.out.printf("%d %s of milk %n", milkPerCup * numCupsNeeded, liquidUOM);
-//        System.out.printf("%d %s of coffee beans %n", beansPerCup * numCupsNeeded, beansUOM);
-//    }
-
     public CoffeeMachine() {
         moneyBalance = 550;
         waterAvailable = 400;
@@ -117,80 +86,23 @@ public class CoffeeMachine {
         System.out.println();
         System.out.println("What do you want to buy? 1 - espresso, 2 - latte, 3 - cappuccino, back - to main menu:");
 
-        // this isn't the way I'd like to do it, but will do so for now.
-        // I would prefer to use inner classes, but will save it for later
-        // The inner class would have access to the outer class and could determine this logic by itself
-        // instead of repeating it.
-
-        int waterNeeded;
-        int beansNeeded;
-        int milkNeeded;
+        CupOfCoffee theCup;
 
         switch (scanner.next()) {
             case "1":
                 // espresso
-                waterNeeded = 250;
-                beansNeeded = 16;
-
-                if (waterAvailable < waterNeeded) {
-                    System.out.println("Sorry, not enough water!");
-                } else if(beansAvailable < beansNeeded) {
-                    System.out.println("Sorry, not enough beans!");
-                } else if(cupsAvailable <= 0) {
-                    System.out.println("Sorry, not enough cups!");
-                } else {
-                    System.out.println("I have enough resources, making you a coffee!");
-                    updateWaterAvailable(-waterNeeded);
-                    updateBeansAvailable(-beansNeeded);
-                    updateMoneyBalance(4);
-                    updateCupsAvailable(-1);
-                }
+                theCup = this.new CupOfCoffee(250, 16, 0, "espresso", 4);
+                theCup.processUserRequest();
                 break;
             case "2":
                 // latte
-                waterNeeded = 350;
-                milkNeeded = 75;
-                beansNeeded = 20;
-
-                if (waterAvailable < waterNeeded) {
-                    System.out.println("Sorry, not enough water!");
-                } else if(milkAvailable < milkNeeded) {
-                    System.out.println("Sorry, not enough milk!");
-                } else if(beansAvailable < beansNeeded) {
-                        System.out.println("Sorry, not enough beans!");
-                } else if(cupsAvailable <= 0) {
-                    System.out.println("Sorry, not enough cups!");
-                } else {
-                    System.out.println("I have enough resources, making you a coffee!");
-                    updateWaterAvailable(-waterNeeded);
-                    updateMilkAvailable(-milkNeeded);
-                    updateBeansAvailable(-beansNeeded);
-                    updateMoneyBalance(7);
-                    updateCupsAvailable(-1);
-                }
+                theCup = this.new CupOfCoffee(350, 20, 75, "latte", 7);
+                theCup.processUserRequest();
                 break;
             case "3":
                 // cappuccino
-                waterNeeded = 200;
-                milkNeeded = 100;
-                beansNeeded = 12;
-                CupOfCoffee theCup = this.new CupOfCoffee(waterNeeded, beansNeeded, milkNeeded, "cappuccino");
-                if (waterAvailable < waterNeeded) {
-                    System.out.println("Sorry, not enough water!");
-                } else if(milkAvailable < milkNeeded) {
-                    System.out.println("Sorry, not enough milk!");
-                } else if(beansAvailable < beansNeeded) {
-                    System.out.println("Sorry, not enough beans!");
-                } else if(cupsAvailable <= 0) {
-                    System.out.println("Sorry, not enough cups!");
-                } else {
-                    System.out.println("I have enough resources, making you a coffee!");
-                    updateWaterAvailable(-waterNeeded);
-                    updateMilkAvailable(-milkNeeded);
-                    updateBeansAvailable(-beansNeeded);
-                    updateMoneyBalance(6);
-                    updateCupsAvailable(-1);
-                }
+                theCup = this.new CupOfCoffee(200, 12, 100, "cappuccino", 6);
+                theCup.processUserRequest();
                 break;
             case "back":
                 return;
@@ -204,13 +116,33 @@ public class CoffeeMachine {
         private int beansNeeded;
         private int milkNeeded;
         private String coffeeType;
+        private int salePrice;
 
+        private void processUserRequest() {
+            if (waterAvailable < waterNeeded) {
+                System.out.println("Sorry, not enough water!");
+            } else if(milkAvailable < milkNeeded) {
+                System.out.println("Sorry, not enough milk!");
+            } else if(beansAvailable < beansNeeded) {
+                System.out.println("Sorry, not enough beans!");
+            } else if(cupsAvailable <= 0) {
+                System.out.println("Sorry, not enough cups!");
+            } else {
+                System.out.println("I have enough resources, making you a coffee!");
+                updateWaterAvailable(-waterNeeded);
+                updateMilkAvailable(-milkNeeded);
+                updateBeansAvailable(-beansNeeded);
+                updateMoneyBalance(salePrice);
+                updateCupsAvailable(-1);
+            }
+        }
 
-        private CupOfCoffee(int waterNeeded, int beansNeeded, int milkNeeded, String coffeeType) {
+        private CupOfCoffee(int waterNeeded, int beansNeeded, int milkNeeded, String coffeeType, int salePrice) {
             this.waterNeeded = waterNeeded;
             this.beansNeeded = beansNeeded;
             this.milkNeeded = milkNeeded;
             this.coffeeType = coffeeType;
+            this.salePrice = salePrice;
         }
     }
 
@@ -230,6 +162,7 @@ public class CoffeeMachine {
                     System.out.println();
                     break;
                 case "take":
+                    System.out.println();
                     coffeeMachine.processUserTake();
                     System.out.println();
                     break;
